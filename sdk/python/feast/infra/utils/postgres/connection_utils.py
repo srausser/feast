@@ -11,7 +11,7 @@ from feast.type_map import arrow_to_pg_type
 
 
 def _get_conn(config: PostgreSQLConfig):
-    conn = psycopg2.connect(
+    connection_params = dict(
         dbname=config.database,
         host=config.host,
         port=int(config.port),
@@ -21,9 +21,11 @@ def _get_conn(config: PostgreSQLConfig):
         sslkey=config.sslkey_path,
         sslcert=config.sslcert_path,
         sslrootcert=config.sslrootcert_path,
-        options="-c search_path={}".format(config.db_schema or config.user),
     )
-    return conn
+    if config.pass_search_path_to_connector:
+        connection_params.update(options="-c search_path={}".format(config.db_schema or config.user))
+
+    return psycopg2.connect(**connection_params)
 
 
 def _df_to_create_table_sql(entity_df, table_name) -> str:

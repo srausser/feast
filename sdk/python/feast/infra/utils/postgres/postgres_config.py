@@ -16,3 +16,4 @@ class PostgreSQLConfig(FeastConfigBaseModel):
     sslkey_path: Optional[StrictStr] = None
     sslcert_path: Optional[StrictStr] = None
     sslrootcert_path: Optional[StrictStr] = None
+    pass_search_path_to_connector: bool = True
